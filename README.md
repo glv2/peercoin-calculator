@@ -23,7 +23,7 @@ The GUI is using Qt.
 
 * Install CommonQt, the instructions can be found on [http://common-lisp.net/project/commonqt/](http://common-lisp.net/project/commonqt/).
 * Copy the source code of the peercoin calculator where you want it to be.
-* Tell your Common Lisp implementation where to find the sources
+* Tell your Common Lisp implementation where to find the sources:
   * ```(push "directory-where-the-sources-are/" asdf:*central-registry*)```
   * If you don't want to type this line every time, you can add it to the initialization file (e.g.: .sbclrc, .ccl-init.lisp, .eclrc).
 
