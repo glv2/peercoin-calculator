@@ -1,5 +1,5 @@
 Peercoin POS/POW calculator
-===
+===========================
 
 Proof-Of-Stake (POS) and Proof-Of-Work (POW) reward and probability calculator for Peercoin.
 

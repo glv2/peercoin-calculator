@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (named-readtables:in-readtable :qt)
 
+(defun tr (string)
+  (#_QCoreApplication::translate "peercoin-calculator" string))
+
 (defclass main-window ()
   ((coins :accessor coins)
    (age :accessor age)
@@ -67,12 +70,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (defmethod initialize-instance :after ((instance main-window) &key)
   (new instance)
-  (let ((calculate-btn (#_new QPushButton "Calculate"))
+  (let ((calculate-btn (#_new QPushButton (tr "Calculate")))
         (layout (#_new QVBoxLayout))
         (layout-entries (#_new QHBoxLayout))
-        (groupbox-pos (#_new QGroupBox "Proof-Of-Stake (POS)"))
+        (groupbox-pos (#_new QGroupBox (tr "Proof-Of-Stake (POS)")))
         (layout-pos-entries (#_new QFormLayout))
-        (groupbox-pow (#_new QGroupBox "Proof-Of-Work (POW)"))
+        (groupbox-pow (#_new QGroupBox (tr "Proof-Of-Work (POW)")))
         (layout-pow-entries (#_new QFormLayout))
         (layout-calculate-btn (#_new QHBoxLayout)))
     (setf (coins instance) (#_new QLineEdit "100")
@@ -86,28 +89,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     (connect calculate-btn "clicked()" instance "calculate()")
 
     ;; Probability table
-    (#_setHorizontalHeaderItem (probabilities instance) 0 (#_new QTableWidgetItem "10 min"))
-    (#_setHorizontalHeaderItem (probabilities instance) 1 (#_new QTableWidgetItem "24 hours"))
-    (#_setHorizontalHeaderItem (probabilities instance) 2 (#_new QTableWidgetItem "31 days"))
-    (#_setHorizontalHeaderItem (probabilities instance) 3 (#_new QTableWidgetItem "90 days"))
-    (#_setHorizontalHeaderItem (probabilities instance) 4 (#_new QTableWidgetItem "1 year"))
-    (#_setVerticalHeaderItem (probabilities instance) 0 (#_new QTableWidgetItem "Probability of POS block"))
-    (#_setVerticalHeaderItem (probabilities instance) 1 (#_new QTableWidgetItem "Probability of POW block"))
+    (#_setHorizontalHeaderItem (probabilities instance) 0 (#_new QTableWidgetItem (tr "10 min")))
+    (#_setHorizontalHeaderItem (probabilities instance) 1 (#_new QTableWidgetItem (tr "24 hours")))
+    (#_setHorizontalHeaderItem (probabilities instance) 2 (#_new QTableWidgetItem (tr "31 days")))
+    (#_setHorizontalHeaderItem (probabilities instance) 3 (#_new QTableWidgetItem (tr "90 days")))
+    (#_setHorizontalHeaderItem (probabilities instance) 4 (#_new QTableWidgetItem (tr "1 year")))
+    (#_setVerticalHeaderItem (probabilities instance) 0 (#_new QTableWidgetItem (tr "Probability of POS block")))
+    (#_setVerticalHeaderItem (probabilities instance) 1 (#_new QTableWidgetItem (tr "Probability of POW block")))
 
     ;; Reward table
-    (#_setHorizontalHeaderItem (rewards instance) 0 (#_new QTableWidgetItem "Reward"))
-    (#_setHorizontalHeaderItem (rewards instance) 1 (#_new QTableWidgetItem "Total"))
-    (#_setVerticalHeaderItem (rewards instance) 0 (#_new QTableWidgetItem "POS block"))
-    (#_setVerticalHeaderItem (rewards instance) 1 (#_new QTableWidgetItem "POW block"))
+    (#_setHorizontalHeaderItem (rewards instance) 0 (#_new QTableWidgetItem (tr "Reward")))
+    (#_setHorizontalHeaderItem (rewards instance) 1 (#_new QTableWidgetItem (tr "Total")))
+    (#_setVerticalHeaderItem (rewards instance) 0 (#_new QTableWidgetItem (tr "POS block")))
+    (#_setVerticalHeaderItem (rewards instance) 1 (#_new QTableWidgetItem (tr "POW block")))
 
     ;; Layout
-    (#_setWindowTitle instance "Peercoin Calculator")
-    (#_addRow layout-pos-entries (#_new QLabel "Number of coins") (coins instance))
-    (#_addRow layout-pos-entries (#_new QLabel "Age of coins (days)") (age instance))
-    (#_addRow layout-pos-entries (#_new QLabel "POS difficulty") (pos-difficulty instance))
+    (#_setWindowTitle instance (tr "Peercoin Calculator"))
+    (#_addRow layout-pos-entries (#_new QLabel (tr "Number of coins")) (coins instance))
+    (#_addRow layout-pos-entries (#_new QLabel (tr "Age of coins (days)")) (age instance))
+    (#_addRow layout-pos-entries (#_new QLabel (tr "POS difficulty")) (pos-difficulty instance))
     (#_setLayout groupbox-pos layout-pos-entries)
-    (#_addRow layout-pow-entries (#_new QLabel "Hash rate") (hash-rate instance))
-    (#_addRow layout-pow-entries (#_new QLabel "POW difficulty") (pow-difficulty instance))
+    (#_addRow layout-pow-entries (#_new QLabel (tr "Hash rate")) (hash-rate instance))
+    (#_addRow layout-pow-entries (#_new QLabel (tr "POW difficulty")) (pow-difficulty instance))
     (#_setLayout groupbox-pow layout-pow-entries)
     (#_addWidget layout-entries groupbox-pos)
     (#_addWidget layout-entries groupbox-pow)
@@ -135,6 +138,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 (defun gui (&optional style)
   "Start the Peercoin Calculator GUI."
   (mk-qapplication "Peercoin Calculator")
+  (let* ((qt-translator (#_new QTranslator))
+         (app-translator (#_new QTranslator))
+         (locale (#_name (#_QLocale::system)))
+         (lang (subseq locale 0 (position #\_ locale)))
+         (qt-translator-file (concatenate 'string
+                                          (#_QLibraryInfo::location (#_QLibraryInfo::TranslationsPath))
+                                          "/qt_"
+                                          locale))
+         (app-translator-file (concatenate 'string "translations/" lang)))
+    (#_QTextCodec::setCodecForTr (#_QTextCodec::codecForName "UTF-8"))
+    (#_load qt-translator qt-translator-file)
+    (#_installTranslator *qapplication* qt-translator)
+    (#_load app-translator app-translator-file)
+    (#_installTranslator *qapplication* app-translator))
+
   (with-main-window (window (make-instance 'main-window))
     (when style
       (#_QApplication::setStyle
