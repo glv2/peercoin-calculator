@@ -141,7 +141,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   (let* ((qt-translator (#_new QTranslator))
          (app-translator (#_new QTranslator))
          (locale (#_name (#_QLocale::system)))
-         (lang (subseq locale 0 (position #\_ locale)))
+         (lang (subseq locale 0 (min 2 (length locale))))
          (qt-translator-file (concatenate 'string
                                           (#_QLibraryInfo::location (#_QLibraryInfo::TranslationsPath))
                                           "/qt_"
