@@ -42,6 +42,6 @@ Other available functions in the peercoin-calculator package:
     (pow-reward difficulty)
     (pow-prob-time difficulty rate time)
 
-## Donation
+## Donations
 
-If you find this program useful and want to make a donation, you can send coins to the following Peercoin address: *PWFNV1Cvq7nQBRyRueuYzwmDNXUGpgNkBC*.
+If you find this program useful and want to make a donation, you can send coins to the following Peercoin address: **PWFNV1Cvq7nQBRyRueuYzwmDNXUGpgNkBC**.
