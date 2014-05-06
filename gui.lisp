@@ -121,7 +121,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     (#_addWidget layout (probabilities instance))
     (#_addWidget layout (rewards instance))
     (#_setLayout instance layout)
-    (#_resize instance 720 400)))
+    (#_resize instance 800 400)))
 
 (defun mk-qapplication (name &rest args)
   "A rewrite of QT:MAKE-QAPPLICATION to allow setting an application name other than 'argv0dummy'."
