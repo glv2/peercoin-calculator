@@ -39,24 +39,16 @@
       <translation>Probabilidad de bloque POS</translation>
     </message>
     <message>
+      <source>Reward of POS block</source>
+      <translation>Recompensa de bloque POS</translation>
+    </message>
+    <message>
       <source>Probability of POW block</source>
       <translation>Probabilidad de bloque POW</translation>
     </message>
     <message>
-      <source>Reward</source>
-      <translation>Recompensa</translation>
-    </message>
-    <message>
-      <source>Total</source>
-      <translation>Total</translation>
-    </message>
-    <message>
-      <source>POS block</source>
-      <translation>Bloque POS</translation>
-    </message>
-    <message>
-      <source>POW block</source>
-      <translation>Bloque POW</translation>
+      <source>Reward of POW block</source>
+      <translation>Recompensa de bloque POW</translation>
     </message>
     <message>
       <source>Peercoin Calculator</source>
