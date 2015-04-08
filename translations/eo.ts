@@ -51,6 +51,10 @@
       <translation>Rekompenco de bloko POW</translation>
     </message>
     <message>
+      <source>Reward in a pool</source>
+      <translation>Rekompenco en kooperativo</translation>
+    </message>
+    <message>
       <source>Peercoin Calculator</source>
       <translation>Kalkulilo Peercoin</translation>
     </message>

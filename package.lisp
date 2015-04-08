@@ -1,5 +1,5 @@
 #|
-Copyright 2014 Guillaume LE VAILLANT
+Copyright 2014-2015 Guillaume LE VAILLANT
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,4 +23,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
            #:pos-prob-day
            #:pos-prob-days
            #:pow-reward
-           #:pow-prob-time))
+           #:pow-prob-time
+           #:pow-pool-reward))

@@ -1,5 +1,5 @@
 #|
-Copyright 2014 Guillaume LE VAILLANT
+Copyright 2014-2015 Guillaume LE VAILLANT
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 (defsystem :peercoin-calculator
     :name "peercoin-calculator"
     :description "Peercoin calculator"
-    :version "0.1"
+    :version "0.2"
     :author "Guillaume LE VAILLANT"
     :license "GPL-3"
     :depends-on (:qt)

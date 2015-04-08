@@ -51,6 +51,10 @@
       <translation>Belohnung des POW Block</translation>
     </message>
     <message>
+      <source>Reward in a pool</source>
+      <translation>Belohnung in einem Pool</translation>
+    </message>
+    <message>
       <source>Peercoin Calculator</source>
       <translation>Peercoin Rechner</translation>
     </message>

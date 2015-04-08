@@ -1,5 +1,5 @@
 #|
-Copyright 2014 Guillaume LE VAILLANT
+Copyright 2014-2015 Guillaume LE VAILLANT
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,36 +36,41 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   (:qt-superclass "QWidget")
   (:slots ("calculate()" calculate)))
 
+(defun print-as-percentage (x n)
+  "Make a string where X is represented as a percentage with N decimals."
+  (let ((fmtstr (concatenate 'string "~," (format nil "~d" n) "f%")))
+    (format nil fmtstr (* x 100))))
+
+(defun print-as-fixed-float (x n)
+  "Make a string where X is represented as a float with N decimals."
+  (let ((fmtstr (concatenate 'string "~," (format nil "~d" n) "f")))
+    (format nil fmtstr x)))
+
 (defmethod calculate ((instance main-window))
-  (flet ((print-as-percentage (x) (format nil "~,6f%" (* x 100)))
-         (print-as-fixed-float (x) (format nil "~,2f" x)))
-    (let (coins age pos-difficulty pow-difficulty hash-rate)
-      (setf coins (read-from-string (#_text (coins instance)))
-            age (read-from-string (#_text (age instance)))
-            pos-difficulty (read-from-string (#_text (pos-difficulty instance)))
-            pow-difficulty (read-from-string (#_text (pow-difficulty instance)))
-            hash-rate (read-from-string (#_text (hash-rate instance))))
+  (let ((coins (read-from-string (#_text (coins instance))))
+        (age (read-from-string (#_text (age instance))))
+        (pos-difficulty (read-from-string (#_text (pos-difficulty instance))))
+        (pow-difficulty (read-from-string (#_text (pow-difficulty instance))))
+        (hash-rate (read-from-string (#_text (hash-rate instance)))))
 
-      ;; POS table
-      (#_setItem (results-pos instance) 0 0 (#_new QTableWidgetItem (print-as-percentage (pos-prob-hashes coins age pos-difficulty (* 60 10)))))
-      (#_setItem (results-pos instance) 0 1 (#_new QTableWidgetItem (print-as-percentage (pos-prob-day coins age pos-difficulty))))
-      (#_setItem (results-pos instance) 0 2 (#_new QTableWidgetItem (print-as-percentage (pos-prob-days coins age pos-difficulty 31))))
-      (#_setItem (results-pos instance) 0 3 (#_new QTableWidgetItem (print-as-percentage (pos-prob-days coins age pos-difficulty 90))))
-      (#_setItem (results-pos instance) 0 4 (#_new QTableWidgetItem (print-as-percentage (pos-prob-days coins age pos-difficulty 365))))
-      (#_setItem (results-pos instance) 1 0 (#_new QTableWidgetItem (print-as-fixed-float (pos-reward coins age))))
-      (#_setItem (results-pos instance) 1 1 (#_new QTableWidgetItem (print-as-fixed-float (pos-reward coins (+ age 1)))))
-      (#_setItem (results-pos instance) 1 2 (#_new QTableWidgetItem (print-as-fixed-float (pos-reward coins (+ age 31)))))
-      (#_setItem (results-pos instance) 1 3 (#_new QTableWidgetItem (print-as-fixed-float (pos-reward coins (+ age 90)))))
-      (#_setItem (results-pos instance) 1 4 (#_new QTableWidgetItem (print-as-fixed-float (pos-reward coins (+ age 365)))))
+    ;; POS table
+    (#_setItem (results-pos instance) 0 0 (#_new QTableWidgetItem (print-as-percentage (pos-prob-hashes coins age pos-difficulty (* 60 10)) 6)))
+    (#_setItem (results-pos instance) 1 0 (#_new QTableWidgetItem (print-as-fixed-float (pos-reward coins age) 2)))
+    (#_setItem (results-pos instance) 0 1 (#_new QTableWidgetItem (print-as-percentage (pos-prob-day coins age pos-difficulty) 6)))
+    (#_setItem (results-pos instance) 1 1 (#_new QTableWidgetItem (print-as-fixed-float (pos-reward coins (+ age 1)) 2)))
+    (let ((times (list 31 90 365)))
+      (dotimes (i 3)
+        (let ((days (elt times i)))
+          (#_setItem (results-pos instance) 0 (+ i 2) (#_new QTableWidgetItem (print-as-percentage (pos-prob-days coins age pos-difficulty days) 6)))
+          (#_setItem (results-pos instance) 1 (+ i 2) (#_new QTableWidgetItem (print-as-fixed-float (pos-reward coins (+ age days)) 2))))))
 
-      ;; POW table
-      (#_setItem (results-pow instance) 0 0 (#_new QTableWidgetItem (print-as-percentage (pow-prob-time pow-difficulty hash-rate (* 60 10)))))
-      (#_setItem (results-pow instance) 0 1 (#_new QTableWidgetItem (print-as-percentage (pow-prob-time pow-difficulty hash-rate (* 60 60 24)))))
-      (#_setItem (results-pow instance) 0 2 (#_new QTableWidgetItem (print-as-percentage (pow-prob-time pow-difficulty hash-rate (* 60 60 24 31)))))
-      (#_setItem (results-pow instance) 0 3 (#_new QTableWidgetItem (print-as-percentage (pow-prob-time pow-difficulty hash-rate (* 60 60 24 90)))))
-      (#_setItem (results-pow instance) 0 4 (#_new QTableWidgetItem (print-as-percentage (pow-prob-time pow-difficulty hash-rate (* 60 60 24 365)))))
+    ;; POW table
+    (let ((times (list (* 60 10) (* 60 60 24) (* 60 60 24 31) (* 60 60 24 90) (* 60 60 24 365))))
       (dotimes (i 5)
-        (#_setItem (results-pow instance) 1 i (#_new QTableWidgetItem (print-as-fixed-float (pow-reward pow-difficulty))))))))
+        (let ((s (elt times i)))
+          (#_setItem (results-pow instance) 0 i (#_new QTableWidgetItem (print-as-percentage (pow-prob-time pow-difficulty hash-rate s) 6)))
+          (#_setItem (results-pow instance) 1 i (#_new QTableWidgetItem (print-as-fixed-float (pow-reward pow-difficulty) 2)))
+          (#_setItem (results-pow instance) 2 i (#_new QTableWidgetItem (print-as-fixed-float (pow-pool-reward pow-difficulty hash-rate s) 6))))))))
 
 (defmethod initialize-instance :after ((instance main-window) &key)
   (new instance)
@@ -81,9 +86,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
           (age instance) (#_new QLineEdit "31")
           (pos-difficulty instance) (#_new QLineEdit "10")
           (pow-difficulty instance) (#_new QLineEdit "100000000")
-          (hash-rate instance) (#_new QLineEdit "0")
+          (hash-rate instance) (#_new QLineEdit "1000000000")
           (results-pos instance) (#_new QTableWidget 2 5)
-          (results-pow instance) (#_new QTableWidget 2 5))
+          (results-pow instance) (#_new QTableWidget 3 5))
 
     (connect calculate-btn "clicked()" instance "calculate()")
 
@@ -104,6 +109,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     (#_setHorizontalHeaderItem (results-pow instance) 4 (#_new QTableWidgetItem (tr "1 year")))
     (#_setVerticalHeaderItem (results-pow instance) 0 (#_new QTableWidgetItem (tr "Probability of POW block")))
     (#_setVerticalHeaderItem (results-pow instance) 1 (#_new QTableWidgetItem (tr "Reward of POW block")))
+    (#_setVerticalHeaderItem (results-pow instance) 2 (#_new QTableWidgetItem (tr "Reward in a pool")))
 
     ;; Layout
     (#_setWindowTitle instance (tr "Peercoin Calculator"))
@@ -123,7 +129,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     (#_addWidget layout (results-pos instance))
     (#_addWidget layout (results-pow instance))
     (#_setLayout instance layout)
-    (#_resize instance 800 400)))
+    (#_resize instance 800 420)))
 
 (defun mk-qapplication (name &rest args)
   "A rewrite of QT:MAKE-QAPPLICATION to allow setting an application name other than 'argv0dummy'."

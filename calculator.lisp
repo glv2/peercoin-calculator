@@ -1,5 +1,5 @@
 #|
-Copyright 2014 Guillaume LE VAILLANT
+Copyright 2014-2015 Guillaume LE VAILLANT
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -104,3 +104,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 (defun pow-prob-time (difficulty rate time)
   "Calculate the probability of generating a proof-of-work block within some TIME (in seconds) given some proof-of-work DIFFICULTY."
   (pow-prob-hashes difficulty (* rate time)))
+
+(defun pow-pool-reward (difficulty rate time)
+  "Calculate the reward expected from mining in a pool during some TIME (in seconds) given some proof-of-work DIFFICULTY."
+  (let ((block-reward (pow-reward difficulty))
+        (prob (pow-prob-hash difficulty)))
+    (* block-reward time prob rate)))

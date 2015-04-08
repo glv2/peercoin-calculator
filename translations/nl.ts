@@ -51,6 +51,10 @@
       <translation>Beloning van POW blok</translation>
     </message>
     <message>
+      <source>Reward in a pool</source>
+      <translation>Beloning in een pool</translation>
+    </message>
+    <message>
       <source>Peercoin Calculator</source>
       <translation>Peercoin Calculator</translation>
     </message>

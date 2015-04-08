@@ -51,6 +51,10 @@
       <translation>Recompensa de bloque POW</translation>
     </message>
     <message>
+      <source>Reward in a pool</source>
+      <translation>Recompensa en una cooperativa</translation>
+    </message>
+    <message>
       <source>Peercoin Calculator</source>
       <translation>Calculadora Peercoin</translation>
     </message>
