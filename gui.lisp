@@ -154,7 +154,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                           (#_QLibraryInfo::location (#_QLibraryInfo::TranslationsPath))
                                           "/qt_"
                                           locale))
-         (app-translator-file (concatenate 'string "translations/" lang)))
+         (app-translator-file (concatenate 'string
+                                           (namestring (asdf:system-source-directory 'peercoin-calculator))
+                                           "translations/"
+                                           lang)))
     (#_QTextCodec::setCodecForTr (#_QTextCodec::codecForName "UTF-8"))
     (#_load qt-translator qt-translator-file)
     (#_installTranslator *qapplication* qt-translator)
